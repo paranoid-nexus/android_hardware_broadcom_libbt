@@ -798,6 +798,12 @@ void hw_config_cback(void *p_mem)
                     strncpy(hw_cfg_cb.local_chip_name, p_name, \
                             LOCAL_NAME_BUFFER_LEN-1);
                 }
+                else if ((p_name = strstr(p_tmp, "SYN")) != NULL)
+                {
+                    strncpy(hw_cfg_cb.local_chip_name, p_name, \
+                            LOCAL_NAME_BUFFER_LEN-1);
+                }
+
 #ifdef USE_BLUETOOTH_BCM4343
                 else if ((p_name = strstr(p_tmp, "4343")) != NULL)
                 {
