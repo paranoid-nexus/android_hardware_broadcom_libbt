@@ -901,16 +901,7 @@ void hw_config_cback(void *p_mem)
                 axi_bridge_lock(0);
 #endif
 
-                /* Normally the firmware patch configuration file
-                 * sets the new starting baud rate at 115200.
-                 * So, we need update host's baud rate accordingly.
-                 */
-                ALOGI("bt vendor lib: set UART baud 115200");
-                userial_vendor_set_baud(USERIAL_BAUD_115200);
-
-                /* Next, we would like to boost baud rate up again
-                 * to desired working speed.
-                 */
+                /* Boost baud rate up to desired working speed. */
                 hw_cfg_cb.f_set_baud_2 = TRUE;
 
                 /* Check if we need to pause a few hundred milliseconds
@@ -919,6 +910,15 @@ void hw_config_cback(void *p_mem)
                 delay = look_up_fw_settlement_delay();
                 ALOGI("Setting fw settlement delay to %d ", delay);
                 ms_delay(delay);
+
+                /* Normally the firmware patch configuration file
+                 * sets the new starting baud rate at 115200.
+                 * So, we need update host's baud rate accordingly.
+                 * We set it after fw settlement in case some platform UART
+                 * would get stuck if changing baudrate while module RTS is high.
+                 */
+                ALOGI("bt vendor lib: set UART baud 115200");
+                userial_vendor_set_baud(USERIAL_BAUD_115200);
 
                 p_buf->len = HCI_CMD_PREAMBLE_SIZE;
                 UINT16_TO_STREAM(p, HCI_RESET);

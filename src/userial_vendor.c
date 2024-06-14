@@ -323,6 +323,7 @@ void userial_vendor_set_baud(uint8_t userial_baud)
     cfsetospeed(&vnd_userial.termios, tcio_baud);
     cfsetispeed(&vnd_userial.termios, tcio_baud);
     tcsetattr(vnd_userial.fd, TCSANOW, &vnd_userial.termios);
+    tcflush(vnd_userial.fd, TCIOFLUSH);
 }
 
 /*******************************************************************************
